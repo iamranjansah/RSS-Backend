@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const schema = new mongoose.schema({
+const schema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, "Please enter the course title"],
@@ -68,8 +68,8 @@ const schema = new mongoose.schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
 });
 
-export const User = mongoose.model("User", schema);
+export const Course = mongoose.model("Course", schema);

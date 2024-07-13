@@ -43,15 +43,21 @@ const schema = new mongoose.schema({
     },
   },
 
-  playlist:[
+  playlist: [
     {
-        course:{
-            type: mongoose.Schema.type.ObjectId,
-            ref:"course",
-        }, 
-        poster: String,
-    }
-  ]
+      course: {
+        type: mongoose.Schema.type.ObjectId,
+        ref: "course",
+      },
+      poster: String,
+    },
+  ],
+  createAt: {
+    type: Date,
+    default: Date.now,
+  },
+  ResetPasswordToken: String,
+  ResetPasswordExpire: String,
 });
 
 export const User = mongoose.model("User", schema);

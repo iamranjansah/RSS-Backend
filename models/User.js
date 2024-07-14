@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import validator from "validator";
 // import isEmail from "validator/lib/isEmail";
 import jwt from 'jsonwebtoken';
+import bcrypt from "bcrypt";
 
 const schema = new mongoose.Schema({
   name: {
@@ -61,11 +62,29 @@ const schema = new mongoose.Schema({
   ResetPasswordExpire: String,
 });
 
+//Hash password using bcrypt
+schema.pre("save", async function (next){
+
+  if(!this.isModified("password")) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  next(); 
+
+})
+
+
+
+//User token using JWTT
 schema.methods.getJWTToken = function (){
   return jwt.sign({ _id:this._id }, process.env.JWT_SECRET, {
     expiresIn: "15d",
   })
 }
 
+
+//User Compare password
+schema.methods.comparePassword = async function (password){
+  return await bcrypt.compare(password, this.password);
+}
 
 export const User = mongoose.model("User", schema);

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import validator from "validator";
-import isEmail from "validator/lib/isEmail";
+// import isEmail from "validator/lib/isEmail";
 
-const schema = new mongoose.schema({
+const schema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please enter your name"],
@@ -46,7 +46,7 @@ const schema = new mongoose.schema({
   playlist: [
     {
       course: {
-        type: mongoose.Schema.type.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "course",
       },
       poster: String,

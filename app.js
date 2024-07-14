@@ -1,5 +1,6 @@
 import express from 'express';
 import {config} from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 config({
     path:"./config/config.env"
@@ -14,6 +15,7 @@ app.use(express.urlencoded ({
     extended:true, 
 }))
 
+app.use(cookieParser());
 
 // Importing and using routes 
 import course from "./routes/courseRoutes.js";

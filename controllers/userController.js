@@ -51,14 +51,27 @@ export const login = catchAsyncError(async (req, res, next) => {
   sendToken(res, user, `Welcome back ${user.name}`, 200);
 });
 
-
 // Logout wala part hai bhai
 
-export const logout = catchAsyncError(async (req,res,next)=>{
-  res.status(200).cookie("token", null,{
-    expire: new Date(Date.now()),
-  }).json({
-    success:true,
-    message:"Logged Out Successfully!",
-  })
-})
+export const logout = catchAsyncError(async (req, res, next) => {
+  res
+    .status(200)
+    .cookie("token", null, {
+      expire: new Date(Date.now()),
+    })
+    .json({
+      success: true,
+      message: "Logged Out Successfully!",
+    });
+});
+
+// My PRofile wala part hai bhai
+
+export const getMyProfile = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});

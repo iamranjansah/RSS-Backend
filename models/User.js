@@ -50,7 +50,7 @@ const schema = new mongoose.Schema({
     {
       course: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "course",
+        ref: "Course",
       },
       poster: String,
     },
@@ -90,7 +90,7 @@ schema.methods.getResetToken = function () {
     .update(resetToken)
     .digest("hex");
 
-    this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
 
   return resetToken;
 };

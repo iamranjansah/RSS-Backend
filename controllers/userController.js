@@ -4,6 +4,7 @@ import { User } from "../models/User.js";
 import { sendToken } from "../utils/sendToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
+import { Course } from "../models/Course.js";
 
 export const register = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -102,6 +103,8 @@ export const changePassword = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// update profile vala part
+
 export const updateProfile = catchAsyncError(async (req, res, next) => {
   const { name, email } = req.body;
 
@@ -127,6 +130,8 @@ export const updateprofilepicture = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// forget password vala part
+
 export const forgetPassword = catchAsyncError(async (req, res, next) => {
   const { email } = req.body;
 
@@ -151,6 +156,8 @@ export const forgetPassword = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// reset password vala part
+
 export const resetPassword = catchAsyncError(async (req, res, next) => {
   const { token } = req.params;
   const resetPasswordToken = crypto
@@ -174,5 +181,58 @@ export const resetPassword = catchAsyncError(async (req, res, next) => {
     success: true,
     message: "Password Changed / Reset successfully",
     // token,
+  });
+});
+
+// add to playlist vala part
+
+export const addToPlaylist = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  const course = await Course.findById(req.body.id);
+
+  if (!course)
+    return next(new ErrorHandler("Course Not Found / Invalid Course Id", 404));
+
+  const itemExist = user.playlist.find((item) => {
+    if (item.course.toString() === course._id.toString()) return true;
+  });
+
+  if (itemExist) return next(new ErrorHandler("Item already exists"));
+
+  user.playlist.push({
+    course: course._id,
+    poster: course.poster.url,
+  });
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Added to playlist successfully",
+  });
+});
+
+// remove from playlist vala part
+
+export const removeFromPlaylist = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  const course = await Course.findById(req.query.id);
+
+  if (!course)
+    return next(new ErrorHandler("Course Not Found / Invalid Course Id", 404));
+
+  const newPlaylist = user.playlist.filter((item) => {
+    if (item.course.toString() !== course._id.toString()) return item;
+  });
+
+  user.playlist = newPlaylist; // updated playlist
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Removed from  playlist successfully",
   });
 });

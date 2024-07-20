@@ -59,29 +59,37 @@ export const getCourseLectures = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// Max video size only 100mb
+
 export const addLecture = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
 
   const { title, description } = req.body;
-
-  // const file = req.files;
 
   const course = await Course.findById(id);
 
   if (!course) return next(new ErrorHandler("Course not found", 404));
 
   //Upload file here
+  const file = req.file;
+
+  const fileUri = getDataUri(file);
+
+  const mycloud = await cloudinary.v2.uploader.upload(fileUri.content,{
+    resource_type: "video",
+  });
 
   course.lectures.push({
     title,
     description,
-    video: {
-      public_id: "temp",
-      url: "temp",
+    video: 
+    {
+      public_id: mycloud.public_id,
+      url: mycloud.secure_url,
     },
   });
 
-  course.noOfVideos = course.lectures.length;
+  // course.noOfVideos = course.lectures.length;
 
   await course.save();
 
@@ -90,3 +98,4 @@ export const addLecture = catchAsyncError(async (req, res, next) => {
     message: "Lecture added in course successfully.",
   });
 });
+

@@ -33,7 +33,7 @@ const schema = new mongoose.Schema({
           required: true,
         },
       },
-    },
+    }
   ],
 
   poster: {

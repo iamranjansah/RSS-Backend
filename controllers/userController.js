@@ -257,3 +257,16 @@ export const removeFromPlaylist = catchAsyncError(async (req, res, next) => {
     message: "Removed from  playlist successfully",
   });
 });
+
+
+// Admin Controllers
+export const getAllUsers = catchAsyncError(async (req, res, next) => {
+  const users = await User.find({});
+ 
+
+  res.status(200).json({
+    success: true,
+    users,
+  });
+});
+

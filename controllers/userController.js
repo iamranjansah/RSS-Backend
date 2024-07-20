@@ -262,11 +262,26 @@ export const removeFromPlaylist = catchAsyncError(async (req, res, next) => {
 // Admin Controllers
 export const getAllUsers = catchAsyncError(async (req, res, next) => {
   const users = await User.find({});
- 
-
   res.status(200).json({
     success: true,
     users,
+  });
+});
+
+//Change Role of User/Admin
+export const updateUserRole = catchAsyncError(async (req, res, next) => {
+const user = await User.findById(req.params.id);
+
+  if (!user) return next(new ErrorHandler("User Not Found", 404));
+  if(user.role === "user") user.role = "admin";
+  else user.role = "user";
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+
+    message: `Role of ${user.name} has been updated to ${user.role}`,
+
   });
 });
 

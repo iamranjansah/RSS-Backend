@@ -12,14 +12,15 @@ import {
   resetPassword,
   updateProfile,
   updateprofilepicture,
+  updateUserRole,
 } from "../controllers/userController.js";
 import { authorizeAdmin, isAuthenticated } from "../middlewares/auth.js";
-import singleUpload from "../middlewares/multer.js"
+import singleUpload from "../middlewares/multer.js";
 
 const router = express.Router();
 
 // To register a new user
-router.route("/register").post( singleUpload, register);
+router.route("/register").post(singleUpload, register);
 
 //Login
 router.route("/login").post(login);
@@ -39,7 +40,7 @@ router.route("/updateprofile").put(isAuthenticated, updateProfile);
 // Update Profile picture
 router
   .route("/updateprofilepicture")
-  .put(  isAuthenticated, singleUpload, updateprofilepicture);
+  .put(isAuthenticated, singleUpload, updateprofilepicture);
 
 // Forget password
 router.route("/forgetpassword").post(forgetPassword);
@@ -56,10 +57,9 @@ router.route("/removefromplaylist").delete(isAuthenticated, removeFromPlaylist);
 //Admin Router
 router.route("/admin/users").get(isAuthenticated, authorizeAdmin, getAllUsers);
 
-
-
-
-
-
+//Change Role of User/Admin
+router
+  .route("/admin/user/:id")
+  .put(isAuthenticated, authorizeAdmin, updateUserRole);
 
 export default router;

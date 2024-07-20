@@ -285,3 +285,46 @@ const user = await User.findById(req.params.id);
   });
 });
 
+//Delete User
+export const deleteUser = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  
+    if (!user) return next(new ErrorHandler("User Not Found", 404));
+
+    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+    //Cancel subscription
+
+    await user.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "User has been deleted successfully",
+    
+    });
+  });
+  
+  
+//Delete my profile
+export const deleteMyProfile = catchAsyncError(async (req, res, next) => {
+
+  const user = await User.findById(req.user._id);
+  
+    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+    //Cancel subscription
+
+    await user.deleteOne();
+
+
+
+    res.status(200).cookie("token",null,{
+      expires: new Date(Date.now()), 
+    }).json({
+      success: true,
+      message: "User has been deleted successfully",
+    
+    });
+  });
+  
+  

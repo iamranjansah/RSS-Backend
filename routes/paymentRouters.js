@@ -1,12 +1,17 @@
 import express from "express";
 import {isAuthenticated} from "../middlewares/auth.js"
-import { buySubscription } from "../controllers/paymentController.js";
+import { buySubscription, getRazorPayKey, paymentVerification } from "../controllers/paymentController.js";
 
 const router = express.Router();
 
 
 // Buy Subscription
+router.route('/subscribe').get(isAuthenticated, buySubscription);
 
-router.route('/subscribe').get(isAuthenticated, buySubscription)
+// Payment verification and save reference in database
+router.route('/paymentverification').post(isAuthenticated, paymentVerification);
+
+// get razorpay key
+router.route('/razorpaykey').get(getRazorPayKey);
 
 export default router;
